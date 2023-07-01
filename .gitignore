@@ -1,0 +1,12 @@
+
+.idea/
+.git/
+
+build/
+cmake-build-debug/
+thirdparty/
+trained_models/
+logs/
+
+**/data/
+**/__pycache__/

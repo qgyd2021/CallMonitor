@@ -1,0 +1,9 @@
+{
+    "en-US": "trained_models/cnn_voicemail_us_20221109",
+    "es-MX": "trained_models/cnn_voicemail_mx_20230519",
+    "id-ID": "trained_models/cnn_voicemail_id_20230519",
+    "ja-JP": "trained_models/cnn_voicemail_jp_20221117",
+    "th-TH": "trained_models/cnn_voicemail_th_20221107",
+    "zh-CN": "trained_models/cnn_voicemail_tw_20230519",
+    "zh-TW": "trained_models/cnn_voicemail_tw_20230519"
+}

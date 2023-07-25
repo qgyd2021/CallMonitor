@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # MSVC cmake.
-# sh install.sh --stage 0 --stop_stage 0
+# sh build.sh --stage 0 --stop_stage 0
 
 verbose=true;
 stage=0

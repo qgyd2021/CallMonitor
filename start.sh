@@ -45,7 +45,16 @@ mkdir -p logs/
 mkdir -p /data/tianxing/update_stream_wav
 
 
-if [ "${environment}" == "dev" ]; then
+if [ "${environment}" == "sz" ]; then
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.75.27.200:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
+
+elif [ "${environment}" == "dev" ]; then
   nohup \
   ./${build_dir}/CallMonitor \
   --http_port ${http_port} \

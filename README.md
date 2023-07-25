@@ -51,10 +51,16 @@ sh build.sh --system_version centos
 
 
 ```shell
-sh start.sh --environment dev
+sh start.sh --environment dev --http_port 4071 --build_dir build
 ```
 1. 运行服务
 environment 可选值: dev, gz, hk, mx. 
+
+
+```text
+sh for_restart.sh --environment dev --http_port 4071 --build_dir build
+```
+1. for_restart.sh 脚本是在服务挂掉之后自动拉起.
 
 
 ```shell

@@ -2,8 +2,8 @@
 
 # sh install.sh --stage -1 --stop_stage -1 --system_version windows
 # sh install.sh --stage 0 --stop_stage 0 --system_version windows
-# sh install.sh --stage -1 --stop_stage -1 --system_version centos
-# sh install.sh --stage 1 --stop_stage 1 --system_version centos
+# sh install.sh --stage -1 --stop_stage 0 --system_version centos
+# sh install.sh --stage 2 --stop_stage 2 --system_version centos
 
 gcc_version=11.1.0
 python_version=3.8.10

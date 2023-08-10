@@ -33,7 +33,7 @@ def get_args():
     )
     parser.add_argument(
         '--scene_id',
-        default='oee5mlu6wfbr',
+        default='unittest_mute_detect_scene_id',
         type=str,
     )
     parser.add_argument(
@@ -123,7 +123,7 @@ def main():
                 task_name = task['task_name']
                 label = task['label']
                 if task_name == 'mute detect':
-                    # print(task["message"])
+                    print(task["message"])
                     if label != expected_label:
                         message = """unittest failed: 
                         filename: {filename}

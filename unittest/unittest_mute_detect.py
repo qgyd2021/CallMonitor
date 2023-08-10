@@ -123,14 +123,15 @@ def main():
                 task_name = task['task_name']
                 label = task['label']
                 if task_name == 'mute detect':
-                    print(task["message"])
                     if label != expected_label:
                         message = """unittest failed: 
                         filename: {filename}
                         language: {language}; expected_label: {expected_label};
+                        message: {message}, 
                         actually_label: {actually_label};
                         """.format(filename=filename.as_posix(), language=language,
-                                   expected_label=expected_label, actually_label=label)
+                                   expected_label=expected_label, message=task["message"],
+                                   actually_label=label)
                         message = re.sub(r'[\u0020]{5,}', '    ', message)
                         print(message)
         else:

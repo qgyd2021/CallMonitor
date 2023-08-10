@@ -3,6 +3,7 @@
 # MSVC cmake.
 # sh build.sh --stage 0 --stop_stage 0
 
+system_version=windows;
 verbose=true;
 stage=0
 stop_stage=0
@@ -43,9 +44,12 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
   $verbose && echo "stage 0: build"
   cd "${work_dir}" || exit 1;
 
+  # cmake -B build
   cmake --build ./build --target CallMonitor -j "$(grep -c ^processor /proc/cpuinfo)"
 
-  # cp ./build/Debug/CallMonitor.exe ./build/CallMonitor.exe
+  if [ "${system_version}" == "windows" ]; then
+    cp ./build/Debug/CallMonitor.exe ./build/CallMonitor.exe
+  fi
   echo "run './build/CallMonitor' to test. "
 fi
 

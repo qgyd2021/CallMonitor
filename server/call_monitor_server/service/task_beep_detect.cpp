@@ -63,7 +63,7 @@ bool BeepDetectContextProcess::update(std::string language, std::string call_id,
 
     signal_.clear();
     float sample = 0.0;
-    for (int i = 0; i <= wav_file.num_samples(); ++i) {
+    for (int i = 0; i < wav_file.num_samples(); ++i) {
       // make sample to [-1, 1]
       sample = (* (wav_file.data() + i)) / (1 << 15);
       signal_.push_back(sample);

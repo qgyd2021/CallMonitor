@@ -17,6 +17,7 @@ DECLARE_uint32(http_port);
 DECLARE_string(cnn_voicemail_gray_box_testing_file);
 DECLARE_string(cnn_voicemail_language_to_model_file);
 DECLARE_string(languages_to_skip_save_wav_file);
+DECLARE_string(mute_detect_json_config_file);
 
 DECLARE_string(asr_event_http_host_port);
 DECLARE_string(asr_event_uri);

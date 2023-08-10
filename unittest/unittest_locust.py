@@ -43,7 +43,7 @@ class CallMonitorTaskSet(TaskSet):
     @task
     def cnn_voicemail(self):
         scene_id = 'unittest_cnn_voicemail_scene_id'
-        data_cnn_voicemail_dir = project_path / 'unittest/data/cnn_voicemail'
+        data_cnn_voicemail_dir = project_path / 'unittest/unittest_data/cnn_voicemail'
 
         data_cnn_voicemail_dir = project_path / data_cnn_voicemail_dir
         filename_list = data_cnn_voicemail_dir.glob('*/*/*.wav')

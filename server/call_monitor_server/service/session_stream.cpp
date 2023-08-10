@@ -18,6 +18,7 @@
 #include "task.h"
 #include "task_beep_detect.h"
 #include "task_cnn_voicemail.h"
+#include "task_mute_detect.h"
 
 
 using json = nlohmann::json;
@@ -48,6 +49,8 @@ void SessionStream::init(){
   beep_detect_manager_ = new BeepDetectManager();
   LOG(INFO) << "new CnnVoicemailManager: " << FLAGS_cnn_voicemail_language_to_model_file;
   cnn_voicemail_manager_ = new CnnVoicemailManager(FLAGS_cnn_voicemail_language_to_model_file);
+  LOG(INFO) << "new MuteManager: " << FLAGS_mute_detect_json_config_file;
+  mute_detect_manager_ = new MuteDetectManager(FLAGS_mute_detect_json_config_file);
 
   wav_save_dir_ = FLAGS_wav_save_dir;
 }
@@ -123,6 +126,18 @@ std::vector<TaskStatus> SessionStream::update_stream(
   );
   task_status_vector.push_back(task_status_cnn_voicemail);
 
+  //task: mute detect
+  LOG(INFO) << "mute detect start";
+  TaskContextProcess * mute_detect_context = mute_detect_manager_->process(language, call_id, scene_id, wav_file);
+  TaskStatus task_status_mute_detect = TaskStatus(
+      "mute detect",
+      mute_detect_context->message_,
+      mute_detect_context->label_,
+      mute_detect_context->status_
+  );
+  task_status_vector.push_back(task_status_mute_detect);
+
+  //return
   return std::move(task_status_vector);
 }
 

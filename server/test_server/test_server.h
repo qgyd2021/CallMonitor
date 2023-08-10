@@ -3,10 +3,15 @@
 //
 #ifndef TEST_SERVER_H
 #define TEST_SERVER_H
+<<<<<<< HEAD:server/test_server/test_server.h
 
 
 #include <httplib.h>
+=======
+>>>>>>> a4089a3 (20230203172900):server/test_server/test_server.cpp
 
+
+#include <httplib.h>
 
 int testServer(int argc, char *argv[])
 {

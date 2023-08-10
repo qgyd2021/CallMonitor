@@ -11,4 +11,5 @@ logs/
 **/data/
 **/__pycache__/
 
+**/*.wav
 **/*.zip

@@ -37,7 +37,7 @@ def get_args():
     )
     parser.add_argument(
         '--data_beep_detect_dir',
-        default='unittest/data/beep_detect',
+        default='unittest/unittest_data/beep_detect',
         type=str,
     )
     args = parser.parse_args()
@@ -100,6 +100,7 @@ def main():
                         print(message)
         else:
             print('request failed, status_code: {}'.format(resp.status_code))
+        break
     return
 
 

@@ -5,11 +5,13 @@
 #ifndef SERVICE_SESSION_STREAM_H
 #define SERVICE_SESSION_STREAM_H
 
+#include <map>
 #include <set>
 #include <vector>
 
 #include "task_beep_detect.h"
 #include "task_cnn_voicemail.h"
+#include "task_mute_detect.h"
 
 
 class TaskStatus
@@ -30,6 +32,7 @@ public:
   std::set<std::string> languages_to_skip_save_wav_set_;
   BeepDetectManager * beep_detect_manager_;
   CnnVoicemailManager * cnn_voicemail_manager_;
+  MuteDetectManager * mute_detect_manager_;
 
   std::string wav_save_dir_;
 

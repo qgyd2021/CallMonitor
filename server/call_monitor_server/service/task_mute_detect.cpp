@@ -50,6 +50,16 @@ bool MuteDetectContextProcess::update(std::string language, std::string call_id,
   if (status_.compare("finished") != 0) {
     std::set<std::string>::iterator black_item =  scene_id_black_list_.find(scene_id);
     if (black_item != scene_id_black_list_.end()) {
+      message_ = "scene_id in black list. ";
+      label_ = "unknown";
+      status_ = "finished";
+      return false;
+    }
+    const std::map<std::string, std::map<std::string, double >>::iterator language_item = enabled_languages_.find(language);
+    if (language_item == enabled_languages_.end()) {
+      message_ = "language invalid. ";
+      label_ = "unknown";
+      status_ = "finished";
       return false;
     }
 

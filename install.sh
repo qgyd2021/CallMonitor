@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # sh install.sh --stage -1 --stop_stage -1 --system_version windows
+# sh install.sh --stage 0 --stop_stage 0 --system_version windows
 # sh install.sh --stage -1 --stop_stage -1 --system_version centos
 # sh install.sh --stage 1 --stop_stage 1 --system_version centos
 
@@ -74,15 +75,27 @@ fi
 
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
-  $verbose && echo "stage 0: install python"
+  $verbose && echo "stage 0: download unittest data"
+  cd "${work_dir}" || exit 1;
+  cd "unittest"  || exit 1;
+
+  rm -rf unittest_data
+  wget https://huggingface.co/datasets/qgyd2021/telemarketing_voice_classification/resolve/main/data/unittest_data.zip
+  unzip unittest_data.zip
+
+fi
+
+
+if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
+  $verbose && echo "stage 1: install python"
   cd "${work_dir}" || exit 1;
 
   sh ./script/install_python.sh --python_version "${python_version}" --system_version "${system_version}"
 fi
 
 
-if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
-  $verbose && echo "stage 1: create virtualenv"
+if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
+  $verbose && echo "stage 2: create virtualenv"
   /usr/local/python-${python_version}/bin/pip3 install virtualenv
   mkdir -p /data/local/bin
   cd /data/local/bin || exit 1;
@@ -92,23 +105,24 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 fi
 
 
-if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
-  $verbose && echo "stage 2: install cmake"
+if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+  $verbose && echo "stage 3: install cmake"
   cd "${work_dir}" || exit 1;
 
   sh ./script/install_cmake.sh --system_version "${system_version}"
 fi
 
 
-if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-  $verbose && echo "stage 3: install gcc"
+if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
+  $verbose && echo "stage 4: install gcc"
   cd "${work_dir}" || exit 1;
 
   sh ./script/install_gcc.sh --gcc_version "${gcc_version}" --system_version "${system_version}"
 fi
 
 
-if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
+  $verbose && echo "stage 5: install gdb"
   yum install -y gdb
 
   debuginfo-install -y glibc-2.17-326.el7_9.x86_64

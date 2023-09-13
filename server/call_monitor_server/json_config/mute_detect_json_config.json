@@ -1,11 +1,10 @@
 {
-    "enabled_languages": {
-        "pt-BR": {
-            "max_duration_threshold": 6.0,
-            "max_energy_threshold": 0.003
-        }
-    },
     "scene_id_black_list": [
         "oee5mlu6wfbr"
-    ]
+    ],
+    "language_to_thresholds": {
+        "pt-BR": [
+            [6.0, 0.002]
+        ]
+    }
 }

@@ -48,6 +48,10 @@ def main():
                 continue
             call_id, language, scene_id, time_stamp = splits
 
+            if language in ("pt-BR",):
+                os.remove(filename)
+                continue
+
             to_path_language = os.path.join(args.to_path, language)
             os.makedirs(to_path_language, exist_ok=True)
 

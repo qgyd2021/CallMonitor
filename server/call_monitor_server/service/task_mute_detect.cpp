@@ -22,27 +22,38 @@ using json = nlohmann::json;
 
 
 MuteDetectContextProcess::MuteDetectContextProcess(
-    const std::map<std::string, std::map<std::string, double >> & enabled_languages,
+    const std::map<std::string, std::vector<std::pair<double, double>>> language_to_thresholds,
     const std::set<std::string> & scene_id_black_list,
-    std::string language, std::string call_id, std::string scene_id): TaskContextProcess(),
-    enabled_languages_(enabled_languages), scene_id_black_list_(scene_id_black_list) {
+    std::string language, std::string call_id, std::string scene_id
+    ): TaskContextProcess(),
+    language_to_thresholds_(language_to_thresholds),
+    scene_id_black_list_(scene_id_black_list)
+    {
 
   language_ = language;
   call_id_ = call_id;
   scene_id_ = scene_id;
 
-  //threshold
-  const std::map<std::string, std::map<std::string, double >>::iterator item = enabled_languages_.find(language);
-
-  if (item != enabled_languages_.end()) {
-    const std::map<std::string, double >::iterator max_energy_threshold = item->second.find("max_energy_threshold");
-    const std::map<std::string, double >::iterator max_duration_threshold = item->second.find("max_duration_threshold");
-    if (max_energy_threshold != item->second.end() && max_duration_threshold != item->second.end() ) {
-      max_energy_threshold_ = max_energy_threshold->second;
-      max_duration_threshold_ = max_duration_threshold->second;
+  //language_to_thresholds, max duration threshold.
+  double energy;
+  double duration;
+  const std::map<std::string, std::vector<std::pair<double, double>>>::iterator item2 = language_to_thresholds_.find(language);
+  if (item2 != language_to_thresholds_.end()) {
+    for (
+        std::vector<std::pair<double, double>>::iterator it = item2->second.begin();
+        it != item2->second.end();
+        ++it
+        ) {
+      duration = (*it).first;
+      if (duration > max_duration_threshold_) {
+        max_duration_threshold_ = duration;
+      }
+      energy = (*it).second;
+      if (duration > max_energy_threshold_) {
+        max_energy_threshold_ = energy;
+      }
     }
   }
-
 }
 
 
@@ -56,8 +67,8 @@ bool MuteDetectContextProcess::update(std::string language, std::string call_id,
       status_ = "finished";
       return false;
     }
-    const std::map<std::string, std::map<std::string, double >>::iterator language_item = enabled_languages_.find(language);
-    if (language_item == enabled_languages_.end()) {
+    const std::map<std::string, std::vector<std::pair<double, double>>>::iterator language_item = language_to_thresholds_.find(language);
+    if (language_item == language_to_thresholds_.end()) {
       message_ = "language invalid. ";
       label_ = "unknown";
       status_ = "finished";
@@ -84,13 +95,22 @@ bool MuteDetectContextProcess::update(std::string language, std::string call_id,
 bool MuteDetectContextProcess::decision() {
   bool result = false;
 
-  message_ = "duration_: " + std::to_string(duration_) + \
-      " gte " + std::to_string(max_duration_threshold_) + \
-      " energy_: " + std::to_string(energy_) + \
-      " lt " + std::to_string(max_energy_threshold_);
+  message_ = "duration: " + std::to_string(duration_) + \
+      " max_duration_threshold:  " + std::to_string(max_duration_threshold_) + \
+      " energy: " + std::to_string(energy_) + \
+      " max_energy_threshold:  " + std::to_string(max_energy_threshold_);
 
-  if (duration_ >= max_duration_threshold_ && energy_ < max_energy_threshold_) {
-    result = true;
+  const std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(language_);
+  if (item != language_to_thresholds_.end()) {
+    for (
+        std::vector<std::pair<double, double>>::iterator it = item->second.begin();
+        it != item->second.end();
+    ++it
+    ) {
+      if (duration_ >= (*it).first && energy_ < (*it).second) {
+        result = true;
+      }
+    }
   }
 
   return result;
@@ -141,26 +161,8 @@ void MuteDetectContextProcess::process(std::string language, std::string call_id
 }
 
 
-void MuteDetectManager::load_enabled_languages(json & enabled_languages_json) {
-  for (
-      json::iterator it = enabled_languages_json.begin();
-      it != enabled_languages_json.end();
-      ++it
-      ) {
-    json value = it.value();
-    json::iterator max_duration_threshold_item = value.find("max_duration_threshold");
-    if (max_duration_threshold_item == value.end()) {
-      continue;
-    }
-    json::iterator max_energy_threshold_item = value.find("max_energy_threshold");
-    if (max_energy_threshold_item == value.end()) {
-      continue;
-    }
-
-    std::map<std::string, double> params = value;
-    enabled_languages_.insert(std::make_pair(it.key(), params));
-
-  }
+void MuteDetectManager::load_language_to_thresholds(json & language_to_thresholds) {
+  language_to_thresholds_ = language_to_thresholds;
 }
 
 
@@ -181,8 +183,8 @@ void MuteDetectManager::load_json_config(const std::string & config_json_file) {
       it != config_json.end();
       ++it
       ) {
-    if (it.key() == "enabled_languages") {
-      this->load_enabled_languages(it.value());
+    if (it.key() == "language_to_thresholds") {
+      this->load_language_to_thresholds(it.value());
 
     } else if (it.key() == "scene_id_black_list") {
       this->load_scene_id_black_list(it.value());
@@ -210,7 +212,7 @@ MuteDetectContextProcess * MuteDetectManager::get_context(std::string language, 
   std::map<std::string, MuteDetectContextProcess * >::iterator item = context_process_cache_.find(call_id);
   if (item == context_process_cache_.end()) {
     context = new MuteDetectContextProcess(
-        enabled_languages_, scene_id_black_list_,
+        language_to_thresholds_, scene_id_black_list_,
         language, call_id, scene_id
         );
     context_process_cache_[call_id] = context;

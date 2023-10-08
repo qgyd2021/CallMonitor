@@ -78,7 +78,7 @@ std::function<void(const httplib::Request &, httplib::Response &)> control_updat
     {
       json requestJson = json::parse(request.body); //将字符串转为json对象
       request_object = requestJson.get<UpdateStreamRequest>(); //将json对象转为定义好的请求体
-      LOG(ERROR) << "request language: " << request_object.language \
+      LOG(INFO) << "request language: " << request_object.language \
           << ", request call_id: " << request_object.call_id \
           << ", request scene_id: " << request_object.scene_id \
           << ", request signal.length(): " << request_object.signal.length();
@@ -137,7 +137,7 @@ std::function<void(const httplib::Request &, httplib::Response &)> control_updat
     json response_json = response_object;
     std::string response_text = response_json.dump();
 
-    LOG(ERROR) << "request language: " << request_object.language \
+    LOG(INFO) << "request language: " << request_object.language \
           << ", request call_id: " << request_object.call_id \
           << ", request scene_id: " << request_object.scene_id \
           << ", request signal.length(): " << request_object.signal.length() \

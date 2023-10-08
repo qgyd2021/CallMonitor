@@ -94,7 +94,7 @@ elif [ "${environment}" == "sg" ]; then
   nohup \
   ./${build_dir}/CallMonitor \
   --http_port ${http_port} \
-  --asr_event_http_host_port "https://nxbot.nxcloud.com" \
+  --asr_event_http_host_port "https://127.0.0.1:8002" \
   --call_monitor_stderrthreshold=0 \
   --call_monitor_log_dir=./logs/ \
   > nohup.out &

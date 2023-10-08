@@ -97,7 +97,7 @@ def main():
                         message = re.sub(r'[\u0020]{5,}', '    ', message)
                         print(message)
         else:
-            print('request failed, status_code: {}'.format(resp.status_code))
+            print('request failed, status_code: {}, text: {}'.format(resp.status_code, resp.text))
     return
 
 

@@ -90,4 +90,13 @@ elif [ "${environment}" == "mx" ]; then
   --call_monitor_log_dir=./logs/ \
   > nohup.out &
 
+elif [ "${environment}" == "sg" ]; then
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "https://nxbot.nxcloud.com" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
+
 fi

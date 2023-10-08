@@ -65,7 +65,7 @@ sh for_restart.sh --environment dev --http_port 4071 --build_dir build
 
 ```shell
 cd unittest
-python3 unittest_cnn_voicemail.py
+python3 unittest_cnn_voicemail.py --port 4071
 
 ```
 1. 单元测试

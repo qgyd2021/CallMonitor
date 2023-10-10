@@ -91,7 +91,8 @@ bool report_asr_event(
             << " asr_event_http_host_port: (" << asr_event_http_host_port << ");" \
             << " asr_event_uri: (" << asr_event_uri << ");" \
             << " response_data: " << response_data << ", (tips: 1 when success);" \
-            << " status: (" << status << "); body: (" << body << ");";
+            << " status: (" << std::to_string(response_data->status) << ");" \
+            << " body: (" << response_data->body << ");";
 
   bool result = false;
   //失败时 responseData 为 0

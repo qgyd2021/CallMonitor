@@ -87,10 +87,11 @@ bool report_asr_event(
   auto response_data = http_requests.Post(asr_event_uri, request_body, "application/json");
   //std::cout << response_data << std::endl;
 
-  LOG(INFO) << "report voicemail " \
-            << "asr_event_http_host_port: (" << asr_event_http_host_port << ")" \
-            << "asr_event_uri (" << asr_event_uri << ")" \
-            << "response_data " << response_data << ", (tips: 1 when success). ";
+  LOG(INFO) << "report voicemail"
+            << " asr_event_http_host_port: (" << asr_event_http_host_port << ");" \
+            << " asr_event_uri: (" << asr_event_uri << ");" \
+            << " response_data: " << response_data << ", (tips: 1 when success);" \
+            << " status: (" << status << "); body: (" << body << ");";
 
   bool result = false;
   //失败时 responseData 为 0
@@ -102,6 +103,7 @@ bool report_asr_event(
 
     //std::cout << status << std::endl;
     //std::cout << body << std::endl;
+
 
     if (status == 200) {
       result = true;

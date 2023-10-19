@@ -3,6 +3,7 @@
 import argparse
 import base64
 from glob import glob
+import json
 import os
 from pathlib import Path
 import shutil
@@ -23,6 +24,12 @@ def get_args():
     parser.add_argument('--zip_pattern', default='*.zip', type=str)
     parser.add_argument('--wav_pattern', default='*.txt', type=str)
 
+    parser.add_argument(
+        '--languages_to_skip_save_wav_file',
+        default='../server/call_monitor_server/json_config/languages_to_skip_save_wav.json',
+        type=str
+    )
+
     args = parser.parse_args()
     return args
 
@@ -31,6 +38,9 @@ def main():
     args = get_args()
     zip_dir = Path(args.zip_dir)
     filename_list1 = zip_dir.glob(args.zip_pattern)
+
+    with open(args.languages_to_skip_save_wav_file, "r", encoding="utf-8") as f:
+        languages_to_skip_save_wav = json.load(f)
 
     for zip_filename in filename_list1:
         print(zip_filename)
@@ -48,7 +58,7 @@ def main():
                 continue
             call_id, language, scene_id, time_stamp = splits
 
-            if language in ("pt-BR",):
+            if language in languages_to_skip_save_wav:
                 os.remove(filename)
                 continue
 

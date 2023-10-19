@@ -26,16 +26,19 @@ def main():
     args = get_args()
     src_dir = args.src_dir
     tgt_dir = args.tgt_dir
-    src_dir = r'D:\programmer\asr_datasets\voicemail\origin_wav\en-US'
+    src_dir = r'D:\programmer\asr_datasets\voicemail\origin_wav\zh-CN'
     tgt_dir = r'D:\programmer\asr_datasets\voicemail\origin_wav\language_temp'
 
     src_dir = Path(src_dir)
     tgt_dir = Path(tgt_dir)
 
+    tgt_dir.mkdir(exist_ok=False)
+
     filename_list = src_dir.glob('*.wav')
 
     count = 0
     for filename in tqdm(filename_list):
+        # print(filename)
         if count > args.limit:
             break
         shutil.move(str(filename), tgt_dir)

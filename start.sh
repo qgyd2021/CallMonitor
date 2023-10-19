@@ -39,8 +39,8 @@ while true; do
 done
 
 
-#rm -rf nohup.out
-#rm -rf logs/
+rm -rf nohup.out
+rm -rf logs/
 mkdir -p logs/
 mkdir -p /data/tianxing/update_stream_wav
 

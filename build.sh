@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # MSVC cmake.
-# sh build.sh --stage 0 --stop_stage 0
+# sh build.sh --stage 0 --stop_stage 0 --system_version centos
 
 system_version=windows;
 verbose=true;

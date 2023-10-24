@@ -38,7 +38,7 @@ def get_args():
     )
     parser.add_argument(
         '--data_beep_detect_dir',
-        default='unittest/unittest_data/mute_detect',
+        default='data/unittest_data/mute_detect',
         type=str,
     )
     parser.add_argument(

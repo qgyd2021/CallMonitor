@@ -32,7 +32,7 @@ class CallMonitorTaskSet(TaskSet):
         self.filename_list = list()
 
     def refresh_filename_list(self):
-        data_cnn_voicemail_dir = project_path / 'unittest/data/cnn_voicemail'
+        data_cnn_voicemail_dir = project_path / 'data/data/cnn_voicemail'
 
         data_cnn_voicemail_dir = project_path / data_cnn_voicemail_dir
         filename_list = data_cnn_voicemail_dir.glob('*/*/*.wav')

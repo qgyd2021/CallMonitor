@@ -37,7 +37,7 @@ def get_args():
     )
     parser.add_argument(
         '--data_cnn_voicemail_dir',
-        default='unittest/unittest_data/cnn_voicemail',
+        default='data/unittest_data/cnn_voicemail',
         type=str,
     )
     args = parser.parse_args()

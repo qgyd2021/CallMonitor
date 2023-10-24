@@ -50,7 +50,13 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
   if [ "${system_version}" == "windows" ]; then
     cp ./build/Debug/CallMonitor.exe ./build/CallMonitor.exe
   fi
-  echo "run './build/CallMonitor' to test. "
+
+  if [ "${system_version}" == "windows" ]; then
+    echo "run './build/CallMonitor.exe' to test. "
+  elif [ "${system_version}" == "centos" ]; then
+    echo "run './build/CallMonitor' to test. "
+  fi
+
 fi
 
 

@@ -13,8 +13,6 @@ verbose=true;
 stage=-1
 stop_stage=3
 
-work_dir="$(pwd)"
-
 # parse options
 while true; do
   [ -z "${1:-}" ] && break;  # break if there are no arguments
@@ -44,6 +42,10 @@ while true; do
   esac
 done
 
+work_dir="$(pwd)"
+data_dir="$(pwd)/data"
+
+mkdir -p "${data_dir}"
 
 yum install -y bzip2 git lrzsz wget vim
 
@@ -57,7 +59,9 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   model_name_array=(
     cnn_voicemail_id_20230519
     cnn_voicemail_jp_20221117
+    cnn_voicemail_kr_20231024
     cnn_voicemail_mx_20230519
+    cnn_voicemail_my_20231024
     cnn_voicemail_th_20221107
     cnn_voicemail_tw_20230519
     cnn_voicemail_us_20221109
@@ -76,8 +80,7 @@ fi
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
   $verbose && echo "stage 0: download unittest data"
-  cd "${work_dir}" || exit 1;
-  cd "unittest"  || exit 1;
+  cd "${data_dir}" || exit 1;
 
   rm -rf unittest_data
   wget https://huggingface.co/datasets/qgyd2021/telemarketing_voice_classification/resolve/main/data/unittest_data.zip

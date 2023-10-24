@@ -20,7 +20,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--wav_file',
-        default='unittest_data/audio/beep_mute.wav',
+        default='data/audio/beep_mute.wav',
         type=str,
     )
     parser.add_argument(

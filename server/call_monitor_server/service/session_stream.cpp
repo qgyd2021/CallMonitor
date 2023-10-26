@@ -30,6 +30,21 @@ TaskStatus::TaskStatus(std::string task_name, std::string message,
                        label_(label), status_(status) {}
 
 
+void SessionStream::load_scene_id_to_language_map(const std::string & filename){
+  json scene_id_to_language_json;
+  std::ifstream f(filename.c_str());
+  f >> scene_id_to_language_json;
+
+  for (
+      json::iterator it = scene_id_to_language_json.begin();
+      it != scene_id_to_language_json.end();
+      ++it
+      ) {
+    scene_id_to_language_map_.insert(std::make_pair(it.key(), it.value()));
+  }
+}
+
+
 void SessionStream::load_languages_to_skip_wav_set(const std::string & filename){
   json languages_to_skip_save_wav_json;
   std::ifstream f(filename.c_str());
@@ -42,7 +57,8 @@ void SessionStream::load_languages_to_skip_wav_set(const std::string & filename)
 
 
 void SessionStream::init(){
-  //languages to skip save wav
+  LOG(INFO) << "load scene id to language: " << FLAGS_scene_id_to_language_file;
+  this->load_scene_id_to_language_map(FLAGS_scene_id_to_language_file);
   LOG(INFO) << "load languages to save wav: " << FLAGS_languages_to_skip_save_wav_file;
   this->load_languages_to_skip_wav_set(FLAGS_languages_to_skip_save_wav_file);
   LOG(INFO) << "new BeepDetectManager: ";
@@ -87,13 +103,26 @@ std::vector<TaskStatus> SessionStream::update_stream(
     const std::string & scene_id,
     const std::string & signal_base64_string
     ) {
+  // language
+  std::string valid_language = language;
+
   std::vector<TaskStatus> task_status_vector;
 
   // save wav
-  auto languages_to_skip_save_wav_set_item = languages_to_skip_save_wav_set_.find(language);
-
+  auto languages_to_skip_save_wav_set_item = languages_to_skip_save_wav_set_.find(valid_language);
   if (languages_to_skip_save_wav_set_item == languages_to_skip_save_wav_set_.end()) {
-    this->save_signal_base64_string(language, call_id, scene_id, signal_base64_string);
+    this->save_signal_base64_string(valid_language, call_id, scene_id, signal_base64_string);
+  }
+
+  // language map by scene_id
+  auto scene_id_to_language_map_item = scene_id_to_language_map_.find(scene_id);
+  if (scene_id_to_language_map_item != scene_id_to_language_map_.end()) {
+    LOG(INFO) << "map language from " << valid_language \
+              << " to " << scene_id_to_language_map_item->second \
+              << " for scene id " << scene_id;
+
+    valid_language = scene_id_to_language_map_item->second;
+
   }
 
   // base64string to wav buffer
@@ -104,7 +133,7 @@ std::vector<TaskStatus> SessionStream::update_stream(
 
   //task: beep detect
   LOG(INFO) << "beep detect start";
-  TaskContextProcess * beep_detect_context = beep_detect_manager_->process(language, call_id, scene_id, wav_file);
+  TaskContextProcess * beep_detect_context = beep_detect_manager_->process(valid_language, call_id, scene_id, wav_file);
 
   TaskStatus task_status_beep_detect = TaskStatus(
       "beep detect",
@@ -116,7 +145,7 @@ std::vector<TaskStatus> SessionStream::update_stream(
 
   //task: cnn voicemail
   LOG(INFO) << "cnn voicemail start";
-  TaskContextProcess * cnn_voicemail_context = cnn_voicemail_manager_->process(language, call_id, scene_id, wav_file);
+  TaskContextProcess * cnn_voicemail_context = cnn_voicemail_manager_->process(valid_language, call_id, scene_id, wav_file);
 
   TaskStatus task_status_cnn_voicemail = TaskStatus(
       "cnn voicemail",
@@ -128,7 +157,7 @@ std::vector<TaskStatus> SessionStream::update_stream(
 
   //task: mute detect
   LOG(INFO) << "mute detect start";
-  TaskContextProcess * mute_detect_context = mute_detect_manager_->process(language, call_id, scene_id, wav_file);
+  TaskContextProcess * mute_detect_context = mute_detect_manager_->process(valid_language, call_id, scene_id, wav_file);
   TaskStatus task_status_mute_detect = TaskStatus(
       "mute detect",
       mute_detect_context->message_,

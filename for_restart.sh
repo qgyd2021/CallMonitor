@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # nohup sh for_restart.sh --environment hk --http_port 4070 --build_dir build > nohup.out &
-# nohup sh for_restart.sh --environment mx --http_port 4070 --build_dir build > nohup.out &
+# nohup sh for_restart.sh --environment sg --http_port 4070 --build_dir build > nohup.out &
 
 
 # dev, hk, gz

@@ -14,6 +14,10 @@ import pandas as pd
 
 
 def get_args():
+    """
+    python3 count_the_time_cost_to_recognize_voicemail.py --filename "logs/CallMonitor.INFO"
+    :return:
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--filename',

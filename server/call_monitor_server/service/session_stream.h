@@ -29,7 +29,9 @@ public:
 class SessionStream
 {
 public:
+  std::map<std::string, std::string> scene_id_to_language_map_;
   std::set<std::string> languages_to_skip_save_wav_set_;
+
   BeepDetectManager * beep_detect_manager_;
   CnnVoicemailManager * cnn_voicemail_manager_;
   MuteDetectManager * mute_detect_manager_;
@@ -48,6 +50,7 @@ public:
       const std::string & signal_base64_string
       );
 
+  void load_scene_id_to_language_map(const std::string & filename);
   void load_languages_to_skip_wav_set(const std::string & filename);
   bool save_signal_base64_string(
       const std::string & language,

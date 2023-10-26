@@ -199,7 +199,7 @@ bash /data/tianxing/images/transfer_img.sh pull nxtele-docker.pkg.coding.net/ops
 ```shell
 docker run -itd \
 --name CallMonitor \
--p 4071:4071 \
+-p 4070:4070 \
 -v /data/tianxing/update_stream_wav:/data/tianxing/update_stream_wav \
 nxtele-docker.pkg.coding.net/ops/callbot-generic/cmake_gcc_py38:v1 \
 /bin/bash

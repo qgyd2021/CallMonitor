@@ -14,7 +14,7 @@ DEFINE_uint32(http_port, 4070, "server port");
 
 DEFINE_string(cnn_voicemail_gray_box_testing_file, "server/call_monitor_server/json_config/cnn_voicemail_language_to_model.json", "cnn_voicemail_gray_box_testing_file");
 DEFINE_string(cnn_voicemail_language_to_model_file, "server/call_monitor_server/json_config/cnn_voicemail_language_to_model.json", "cnn_voicemail_language_to_model_file");
-DEFINE_string(scene_id_to_language_file, "server/call_monitor_server/json_config/sence_id_to_language.json", "scene_id_to_language_file");
+DEFINE_string(scene_id_to_language_file, "server/call_monitor_server/json_config/scene_id_to_language.json", "scene_id_to_language_file");
 DEFINE_string(languages_to_skip_save_wav_file, "server/call_monitor_server/json_config/languages_to_skip_save_wav.json", "languages_to_skip_save_wav_file");
 DEFINE_string(mute_detect_json_config_file, "server/call_monitor_server/json_config/mute_detect_json_config.json", "mute_detect_json_config_file");
 

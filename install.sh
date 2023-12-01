@@ -70,7 +70,7 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   for model_name in ${model_name_array[*]}
   do
     if [ ! -d "${model_name}" ]; then
-      wget -c "https://huggingface.co/qgyd2021/cnn_voicemail/resolve/main/${model_name}.zip"
+      wget -c "https://huggingface.co/spaces/qgyd2021/voicemail/resolve/main/trained_models/${model_name}.zip"
       unzip "${model_name}.zip"
       rm "${model_name}.zip"
     fi

@@ -3,6 +3,8 @@
 //
 #include <string>
 
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+
 #include <glog/logging.h>
 #include <httplib.h>
 #include <nlohmann/json.hpp>

@@ -1,7 +1,6 @@
 #include <iostream>
 
 #define CPPHTTPLIB_THREAD_POOL_COUNT 8u
-#define CPPHTTPLIB_OPENSSL_SUPPORT
 
 #include "server/call_monitor_server/call_monitor_server.h"
 

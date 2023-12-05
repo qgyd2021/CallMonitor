@@ -78,7 +78,14 @@ bool report_asr_event(
   nlohmann::json request_json = request;
   auto request_body = request_json.dump();
 
-  httplib::Client http_requests(asr_event_http_host_port);
+  if (asr_event_http_host_port.substr(0, 5) == "https") {
+    httplib::SSLClient http_requests(asr_event_http_host_port);
+  } else {
+    httplib::Client http_requests(asr_event_http_host_port);
+  }
+
+  //httplib::Client http_requests(asr_event_http_host_port);
+
   http_requests.set_connection_timeout(0, 300000); // 300 milliseconds
   http_requests.set_read_timeout(2, 0); // seconds
   http_requests.set_write_timeout(2, 0); // seconds

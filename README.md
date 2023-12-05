@@ -54,11 +54,11 @@ sh build.sh --system_version centos
 sh start.sh --environment dev --http_port 4071 --build_dir build
 ```
 1. 运行服务
-environment 可选值: dev, gz, hk, mx. 
+environment 可选值: dev, gz, hk, mx, vi, id. 
 
 
 ```text
-sh for_restart.sh --environment dev --http_port 4071 --build_dir build
+sh for_restart.sh --environment id --http_port 4071 --build_dir build
 ```
 1. for_restart.sh 脚本是在服务挂掉之后自动拉起.
 
@@ -193,13 +193,24 @@ bash /data/tianxing/images/transfer_img.sh pull nxtele-docker.pkg.coding.net/ops
 
 ```
 
+查看 nginx 配置
+```text
+cd /etc/nginx/conf.d
+
+cat mrcp.nginx
+
+service nginx reload
+
+nginx -t
+```
+
 启动容器
 从 cmake_gcc_py38:v1 镜像布署服务, 这样可以避免 cmake, gcc, python 几个工具的下载和编译耗时太长. 
 
 ```shell
 docker run -itd \
 --name CallMonitor \
--p 4070:4070 \
+-p 4071:4071 \
 -v /data/tianxing/update_stream_wav:/data/tianxing/update_stream_wav \
 nxtele-docker.pkg.coding.net/ops/callbot-generic/cmake_gcc_py38:v1 \
 /bin/bash
@@ -230,4 +241,25 @@ where
 查看进程的线程数
 ```text
 cat /proc/770/status | grep Threads
+```
+
+从容器中复制文件
+```text
+docker cp \
+CallMonitor:/data/tianxing/CLionProjects/CallMonitor/build/CallMonitor \
+/tmp
+
+docker cp \
+/tmp/CallMonitor \
+CallMonitor:/data/tianxing/CLionProjects/CallMonitor/build/
+
+```
+
+nginx 重启
+```text
+cd /etc/nginx/conf.d
+
+service nginx reload
+
+nginx -t
 ```

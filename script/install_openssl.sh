@@ -41,7 +41,7 @@ if [ ${system_version} = "centos" ]; then
   mkdir -p /data/dep
   cd /data/dep || exit 1;
 
-  if [ ! -e openssl-1.1.1n.tar.gz ]; then
+  if [ ! -e openssl-${openssl_version}.tar.gz ]; then
     wget "https://www.openssl.org/source/openssl-${openssl_version}.tar.gz" --no-check-certificate
   fi
 

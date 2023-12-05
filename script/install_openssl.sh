@@ -3,6 +3,7 @@
 # params:
 system_version="centos";
 
+openssl_version=1.1.1t
 
 # parse options
 while true; do
@@ -41,14 +42,14 @@ if [ ${system_version} = "centos" ]; then
   cd /data/dep || exit 1;
 
   if [ ! -e openssl-1.1.1n.tar.gz ]; then
-    wget https://www.openssl.org/source/openssl-1.1.1n.tar.gz --no-check-certificate
+    wget "https://www.openssl.org/source/openssl-${openssl_version}.tar.gz" --no-check-certificate
   fi
 
   cd /data/dep || exit 1;
-  if [ ! -d openssl-1.1.1n ]; then
-    tar -zxvf openssl-1.1.1n.tar.gz
+  if [ ! -d openssl-${openssl_version} ]; then
+    tar -zxvf openssl-${openssl_version}.tar.gz
 
-    cd /data/dep/openssl-1.1.1n || exit 1;
+    cd /data/dep/openssl-${openssl_version} || exit 1;
   fi
 
   mkdir -p /usr/local/openssl

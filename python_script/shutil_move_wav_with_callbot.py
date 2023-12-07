@@ -24,7 +24,7 @@ def get_args():
 
 
 x_access_token = """
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTgwNDg3MjIsImRhdGEiOnsiYWNjb3VudCI6Ik5YMDgzNzdAOWVWRjJsVTJKLnRpYm90LmNvbSIsImlkIjoiNTUwMyIsIm5hbWUiOiJOWDA4Mzc3LUFJYm905bmz5Y-wIiwicm9sZSI6MSwib3BlcmF0ZUdyYW50IjozMX0sImlhdCI6MTY5ODA0MTUyMn0.Uj0yHWV7YWEPeS9hmX10d1NAEUEiDsncMSI0BlCOk7U
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDE5MTk2OTAsImRhdGEiOnsiYWNjb3VudCI6Ik5YMDgzNzdAOWVWRjJsVTJKLnRpYm90LmNvbSIsImlkIjoiNTUwMyIsIm5hbWUiOiJOWDA4Mzc3LUFJYm905bmz5Y-wIiwicm9sZSI6MSwib3BlcmF0ZUdyYW50IjozMX0sImlhdCI6MTcwMTkxMjQ5MH0.Io-FOizXHH_xGt08kXViJDJ5eII1qRxycf1bvAsBTvU
 """
 
 
@@ -158,7 +158,7 @@ def main():
     args = get_args()
     src_dir = args.src_dir
     tgt_dir = args.tgt_dir
-    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\ko-KR"
+    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\ja-JP"
     tgt_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\language_temp"
 
     src_dir = Path(src_dir)
@@ -168,7 +168,7 @@ def main():
 
     count = 0
     for filename in tqdm(src_dir.glob("*.wav")):
-        if count < 4139:
+        if count < 280:
             count += 1
             continue
 

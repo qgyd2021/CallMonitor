@@ -58,7 +58,7 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
 
   model_name_array=(
     cnn_voicemail_id_20230519
-    cnn_voicemail_jp_20221117
+    cnn_voicemail_jp_20231207
     cnn_voicemail_kr_20231024
     cnn_voicemail_mx_20230519
     cnn_voicemail_my_20231024

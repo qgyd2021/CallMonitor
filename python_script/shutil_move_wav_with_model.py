@@ -30,7 +30,7 @@ def get_args():
         default=(project_path / "trained_models/cnn_voicemail_common_20231130.zip").as_posix(),
         type=str
     )
-    parser.add_argument("--label", default="bell", type=str)
+    parser.add_argument("--label", default="voice", type=str)
 
     args = parser.parse_args()
     return args
@@ -82,7 +82,7 @@ def main():
     args = get_args()
     src_dir = args.src_dir
     tgt_dir = args.tgt_dir
-    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\ja-JP"
+    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\ja-JP2"
     tgt_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\language_temp"
 
     src_dir = Path(src_dir)
@@ -94,7 +94,7 @@ def main():
     d = load_model(Path(args.model_file))
 
     count = 0
-    for filename in tqdm(src_dir.glob("*/*/*.wav")):
+    for filename in tqdm(src_dir.glob("*.wav")):
 
         if count < 0:
             count += 1
@@ -115,10 +115,10 @@ def main():
         else:
             continue
 
-        # sample_rate, signal = wavfile.read(filename)
-        # label, _ = predict(signal=signal, model_dict=d)
-        # if label != args.label:
-        #     continue
+        sample_rate, signal = wavfile.read(filename)
+        label, _ = predict(signal=signal, model_dict=d)
+        if label != args.label:
+            continue
 
         if count > args.limit:
             break

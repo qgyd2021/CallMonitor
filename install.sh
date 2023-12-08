@@ -2,6 +2,7 @@
 
 # sh install.sh --stage -1 --stop_stage -1 --system_version windows
 # sh install.sh --stage 0 --stop_stage 0 --system_version windows
+# sh install.sh --stage -1 --stop_stage -1 --system_version centos
 # sh install.sh --stage -1 --stop_stage 0 --system_version centos
 # sh install.sh --stage 2 --stop_stage 2 --system_version centos
 
@@ -58,7 +59,7 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
 
   model_name_array=(
     cnn_voicemail_id_20230519
-    cnn_voicemail_jp_20231207
+    cnn_voicemail_jp_20231208
     cnn_voicemail_kr_20231024
     cnn_voicemail_mx_20230519
     cnn_voicemail_my_20231024

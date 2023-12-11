@@ -19,7 +19,7 @@
     },
     "ja-JP": {
         "model_dir": "trained_models/cnn_voicemail_jp_20231208",
-        "max_duration": 25.0,
+        "max_duration": 60.0,
         "max_hit_times": -1,
         "black_list": []
     },

@@ -54,6 +54,9 @@ def main():
         expected_label = filename.parts[-2]
         language = filename.parts[-3]
 
+        if language not in ("ja-JP",):
+            continue
+
         with open(filename, 'rb') as f:
             data = f.read()
 
@@ -74,7 +77,8 @@ def main():
 
         data = {
             'language': language,
-            'call_id': 'unittest_cnn_voicemail_call_id_{}'.format(call_id),
+            # 'call_id': 'unittest_cnn_voicemail_call_id_{}'.format(call_id),
+            "call_id": "call_id",
             'scene_id': args.scene_id,
             'signal': base64string,
         }

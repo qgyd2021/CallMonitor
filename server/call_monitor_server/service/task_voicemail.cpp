@@ -1,5 +1,5 @@
 //
-// Created by tianx on 2023/4/23.
+// Created by tianx on 2023/12/8.
 //
 #include <chrono>
 #include <cstdint>
@@ -16,7 +16,7 @@
 
 #include "report_asr_event.h"
 #include "task.h"
-#include "task_cnn_voicemail.h"
+#include "task_voicemail.h"
 #include "toolbox/utils/wav.h"
 #include "../settings.h"
 
@@ -24,7 +24,7 @@
 using json = nlohmann::json;
 
 
-CnnVoicemailModel::CnnVoicemailModel(const std::string & model_dir) {
+VoicemailModel::VoicemailModel(const std::string & model_dir) {
   std::string model_file = model_dir + "/pth/cnn_voicemail.pth";
   std::string label_file = model_dir + "/pth/labels.json";
 
@@ -51,7 +51,7 @@ CnnVoicemailModel::CnnVoicemailModel(const std::string & model_dir) {
 }
 
 
-c10::Dict<c10::IValue, c10::IValue> CnnVoicemailModel::forward(
+c10::Dict<c10::IValue, c10::IValue> VoicemailModel::forward(
     std::vector<float> & signal) {
 
   torch::IValue outputs_i_value;
@@ -61,7 +61,7 @@ c10::Dict<c10::IValue, c10::IValue> CnnVoicemailModel::forward(
     torch::Tensor inputs = torch::unsqueeze(inputs1, 0);
     outputs_i_value = this->model_({inputs});
   } catch (const c10::Error &e) {
-    LOG(ERROR) << "CnnVoicemailModel::forward error: " << e.what();
+    LOG(ERROR) << "VoicemailModel::forward error: " << e.what();
     throw e;
   }
   c10::Dict<c10::IValue, c10::IValue> outputs = outputs_i_value.toGenericDict();
@@ -69,20 +69,33 @@ c10::Dict<c10::IValue, c10::IValue> CnnVoicemailModel::forward(
 }
 
 
-CnnVoicemailContextProcess::CnnVoicemailContextProcess(
-    const std::map<std::string, CnnVoicemailModel *> & language_to_model_map,
-    const std::map<std::string, std::set<std::string>> & language_to_scene_ids_gray_box_testing_map):
+VoicemailContextProcess::VoicemailContextProcess(
+    const std::map<std::string, VoicemailModel *> & language_to_model_map,
+    const std::map<std::string, json> & language_to_model_settings_map):
     TaskContextProcess(),
     language_to_model_map_(language_to_model_map),
-    language_to_scene_ids_gray_box_testing_map_(language_to_scene_ids_gray_box_testing_map) {
+    language_to_model_settings_map_(language_to_model_settings_map) {
   //
 }
 
 
-bool CnnVoicemailContextProcess::update(std::string language, std::string call_id,
+bool VoicemailContextProcess::update(std::string language, std::string call_id,
                                         std::string scene_id, const toolbox::WavFile & wav_file) {
   if (status_.compare("finished") != 0) {
+    //settings
+    auto item1 = language_to_model_settings_map_.find(language);
+    if (item1 == language_to_model_settings_map_.end()) {
+      label_ = "language invalid";
+      status_ = "finished";
+      return false;
+    }
 
+    json js = item1->second;
+    max_duration_ = js["max_duration"];
+    max_hit_times_ = js["max_hit_times"];
+    black_list_ = js["black_list"].get<std::set<std::string>>();
+
+    //
     language_ = language;
     call_id_ = call_id;
     scene_id_ = scene_id;
@@ -98,28 +111,22 @@ bool CnnVoicemailContextProcess::update(std::string language, std::string call_i
 
     duration_ += (float) wav_file.num_samples() / (float) wav_file.sample_rate();
 
-    //language to scene_ids gray box testing
-    //std::map<std::string, std::set<std::string>>::iterator item1 = language_to_scene_ids_gray_box_testing_map_.find(language);
-    auto item1 = language_to_scene_ids_gray_box_testing_map_.find(language);
-    if (item1 != language_to_scene_ids_gray_box_testing_map_.end()) {
-      std::set <std::string> scene_ids = item1->second;
-      std::set<std::string>::iterator it = scene_ids.find(scene_id);
-      if (it == scene_ids.end()) {
-        label_ = "scene id not allowed in test language";
-        status_ = "finished";
-        return false;
-      }
+    //black list
+    std::set<std::string>::iterator it = black_list_.find(scene_id);
+    if (it != black_list_.end()) {
+      label_ = "hit black list";
+      status_ = "finished";
+      return false;
     }
 
     //model
-    //std::map<std::string, CnnVoicemailModel * >::iterator item2 = language_to_model_map_.find(language);
     auto item2 = language_to_model_map_.find(language);
     if (item2 == language_to_model_map_.end()) {
       label_ = "language invalid";
       status_ = "finished";
       return false;
     } else {
-      CnnVoicemailModel *model_ptr = item2->second;
+      VoicemailModel *model_ptr = item2->second;
       c10::Dict <c10::IValue, c10::IValue> outputs = model_ptr->forward(signal_);
       torch::Tensor probs_tensor = outputs.at(c10::IValue("probs")).toTensor();
       torch::Tensor indexes_tensor = torch::argmax(probs_tensor, -1);
@@ -148,7 +155,7 @@ bool CnnVoicemailContextProcess::update(std::string language, std::string call_i
 }
 
 
-bool CnnVoicemailContextProcess::decision() {
+bool VoicemailContextProcess::decision() {
   bool result = false;
   while (true) {
     if (score_queue_.empty()) {
@@ -158,13 +165,13 @@ bool CnnVoicemailContextProcess::decision() {
     score_queue_.pop();
     if (this_score_ > threshold1_) {
       message_ = "this_score: " + std::to_string(this_score_) +
-          ", threshold1_: " + std::to_string(threshold1_);
+                 ", threshold1_: " + std::to_string(threshold1_);
       result = true;
       break;
     } else if ((last_score_ + this_score_) / 2 > threshold2_) {
       message_ = "last_score: " + std::to_string(last_score_) +
-          ", this_score: " + std::to_string(this_score_) +
-          ", threshold2_: " + std::to_string(threshold2_);
+                 ", this_score: " + std::to_string(this_score_) +
+                 ", threshold2_: " + std::to_string(threshold2_);
       result = true;
       break;
     }
@@ -174,7 +181,7 @@ bool CnnVoicemailContextProcess::decision() {
 }
 
 
-void CnnVoicemailContextProcess::process(std::string language, std::string call_id,
+void VoicemailContextProcess::process(std::string language, std::string call_id,
                                          std::string scene_id, const toolbox::WavFile & wav_file) {
   bool update_flag = this->update(language, call_id, scene_id, wav_file);
   if ( ! update_flag ) {
@@ -204,9 +211,14 @@ void CnnVoicemailContextProcess::process(std::string language, std::string call_
         FLAGS_asr_event_uri,
         FLAGS_secret_key
     );
+
     label_ = "voicemail";
-    status_ = "finished";
-  } else if (duration_ >= 10.) {
+
+    hit_times_ += 1;
+    if (max_hit_times_ > 0 && hit_times_ >= max_hit_times_) {
+      status_ = "finished";
+    }
+  } else if (duration_ >= max_duration_) {
     label_ = "unknown";
     status_ = "finished";
   } else {
@@ -215,66 +227,66 @@ void CnnVoicemailContextProcess::process(std::string language, std::string call_
 }
 
 
-void CnnVoicemailManager::load_language_to_model_map(
-    const std::string &language_to_model_json_file) {
+void VoicemailManager::load_language_to_model_map(
+    const std::string & voicemail_json_file) {
   json language_to_model_json;
-  std::ifstream f(language_to_model_json_file);
+  std::ifstream f(voicemail_json_file);
   f >> language_to_model_json;
 
   std::string language;
   std::string model_dir;
-  std::string model_path;
-  std::string label_path;
   for (json::iterator it = language_to_model_json.begin();
        it != language_to_model_json.end(); ++it) {
 
-    //language = static_cast<std::string>(it.keys());
-    //model_dir = static_cast<std::string>(it.value());
+    language = it.key();
+    model_dir = it.value()["model_dir"];
+
+    VoicemailModel * voicemail_model = new VoicemailModel(model_dir);
+    language_to_model_map_[language] = voicemail_model;
+
+  }
+}
+
+
+void VoicemailManager::load_language_to_model_settings_map(
+    const std::string & voicemail_json_file) {
+  json language_to_model_json;
+  std::ifstream f(voicemail_json_file);
+  f >> language_to_model_json;
+
+  std::string language;
+  json js;
+  for (json::iterator it = language_to_model_json.begin();
+       it != language_to_model_json.end(); ++it) {
 
     language = it.key();
-    model_dir = it.value();
+    js = it.value();
 
-    CnnVoicemailModel * cnn_voicemail_model = new CnnVoicemailModel(model_dir);
-    language_to_model_map_[language] = cnn_voicemail_model;
+    language_to_model_settings_map_[language] = js;
 
   }
 }
 
 
-void CnnVoicemailManager::load_language_to_scene_ids_gray_box_testing_map(
-    const std::string &cnn_voicemail_gray_box_testing_file) {
-  json language_to_scene_ids_json;
-  std::ifstream f(cnn_voicemail_gray_box_testing_file);
-  f >> language_to_scene_ids_json;
-
-  for (
-      json::iterator it = language_to_scene_ids_json.begin();
-      it != language_to_scene_ids_json.end();
-      ++it
-      ) {
-    std::set<std::string> value = it.value();
-    language_to_scene_ids_gray_box_testing_map_.insert(std::make_pair(it.key(), value));
-  }
-}
-
-
-CnnVoicemailManager::CnnVoicemailManager(const std::string & language_to_model_json_file) {
+VoicemailManager::VoicemailManager(const std::string & voicemail_json_file) {
   //load models
-  LOG(INFO) << "load language to model map: " << language_to_model_json_file;
-  this->load_language_to_model_map(language_to_model_json_file);
+  LOG(INFO) << "load language to model map: " << voicemail_json_file;
+  this->load_language_to_model_map(voicemail_json_file);
+  LOG(INFO) << "load language to model settings map: " << voicemail_json_file;
+  this->load_language_to_model_settings_map(voicemail_json_file);
 }
 
 
-CnnVoicemailContextProcess * CnnVoicemailManager::get_context(std::string call_id) {
+VoicemailContextProcess * VoicemailManager::get_context(std::string call_id) {
   cache_update_lock_.lock();
 
-  CnnVoicemailContextProcess * context;
+  VoicemailContextProcess * context;
 
-  std::map<std::string, CnnVoicemailContextProcess * >::iterator item = context_process_cache_.find(call_id);
+  std::map<std::string, VoicemailContextProcess * >::iterator item = context_process_cache_.find(call_id);
   if (item == context_process_cache_.end()) {
-    context = new CnnVoicemailContextProcess(
-      language_to_model_map_,
-      language_to_scene_ids_gray_box_testing_map_
+    context = new VoicemailContextProcess(
+        language_to_model_map_,
+        language_to_model_settings_map_
     );
     context_process_cache_[call_id] = context;
   } else {
@@ -286,7 +298,7 @@ CnnVoicemailContextProcess * CnnVoicemailManager::get_context(std::string call_i
 }
 
 
-void CnnVoicemailManager::clear_context() {
+void VoicemailManager::clear_context() {
   auto second_clock = std::chrono::duration_cast<std::chrono::seconds>(
       std::chrono::system_clock::now().time_since_epoch());
   std::int64_t timestamp_now = second_clock.count();
@@ -299,7 +311,7 @@ void CnnVoicemailManager::clear_context() {
 
     // search the context that timeout
     std::list<std::string> timeout_contexts;
-    for (std::map<std::string, CnnVoicemailContextProcess *>::iterator it = context_process_cache_.begin();
+    for (std::map<std::string, VoicemailContextProcess *>::iterator it = context_process_cache_.begin();
          it != context_process_cache_.end(); ++it) {
       std::int64_t duration = timestamp_now - it->second->last_update_time_;
 
@@ -311,7 +323,7 @@ void CnnVoicemailManager::clear_context() {
 
     //erase the timeout context
     for (std::list<std::string>::iterator it=timeout_contexts.begin(); it != timeout_contexts.end(); ++it) {
-      std::map<std::string, CnnVoicemailContextProcess *>::iterator item = context_process_cache_.find(*it);
+      std::map<std::string, VoicemailContextProcess *>::iterator item = context_process_cache_.find(*it);
       if (item != context_process_cache_.end()) {
         delete item->second;
         context_process_cache_.erase(*it);
@@ -322,9 +334,9 @@ void CnnVoicemailManager::clear_context() {
 }
 
 
-TaskContextProcess * CnnVoicemailManager::process(std::string language, std::string call_id,
-                             std::string scene_id, const toolbox::WavFile & wav_file) {
-  CnnVoicemailContextProcess * context_ptr = this->get_context(call_id);
+TaskContextProcess * VoicemailManager::process(std::string language, std::string call_id,
+                                               std::string scene_id, const toolbox::WavFile & wav_file) {
+  VoicemailContextProcess * context_ptr = this->get_context(call_id);
   context_ptr->process(language, call_id, scene_id, wav_file);
   this->clear_context();
   return context_ptr;

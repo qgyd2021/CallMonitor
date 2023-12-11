@@ -17,7 +17,7 @@
 
 #include "task.h"
 #include "task_beep_detect.h"
-#include "task_cnn_voicemail.h"
+#include "task_voicemail.h"
 #include "task_mute_detect.h"
 
 
@@ -63,8 +63,8 @@ void SessionStream::init(){
   this->load_languages_to_skip_wav_set(FLAGS_languages_to_skip_save_wav_file);
   LOG(INFO) << "new BeepDetectManager: ";
   beep_detect_manager_ = new BeepDetectManager();
-  LOG(INFO) << "new CnnVoicemailManager: " << FLAGS_cnn_voicemail_language_to_model_file;
-  cnn_voicemail_manager_ = new CnnVoicemailManager(FLAGS_cnn_voicemail_language_to_model_file);
+  LOG(INFO) << "new VoicemailManager: " << FLAGS_voicemail_json_file;
+  voicemail_manager_ = new VoicemailManager(FLAGS_voicemail_json_file);
   LOG(INFO) << "new MuteManager: " << FLAGS_mute_detect_json_config_file;
   mute_detect_manager_ = new MuteDetectManager(FLAGS_mute_detect_json_config_file);
 
@@ -143,17 +143,17 @@ std::vector<TaskStatus> SessionStream::update_stream(
       );
   task_status_vector.push_back(task_status_beep_detect);
 
-  //task: cnn voicemail
-  LOG(INFO) << "cnn voicemail start";
-  TaskContextProcess * cnn_voicemail_context = cnn_voicemail_manager_->process(valid_language, call_id, scene_id, wav_file);
+  //task: voicemail
+  LOG(INFO) << "voicemail start";
+  TaskContextProcess * voicemail_context = voicemail_manager_->process(valid_language, call_id, scene_id, wav_file);
 
-  TaskStatus task_status_cnn_voicemail = TaskStatus(
-      "cnn voicemail",
-      cnn_voicemail_context->message_,
-      cnn_voicemail_context->label_,
-      cnn_voicemail_context->status_
+  TaskStatus task_status_voicemail = TaskStatus(
+      "voicemail",
+      voicemail_context->message_,
+      voicemail_context->label_,
+      voicemail_context->status_
   );
-  task_status_vector.push_back(task_status_cnn_voicemail);
+  task_status_vector.push_back(task_status_voicemail);
 
   //task: mute detect
   LOG(INFO) << "mute detect start";

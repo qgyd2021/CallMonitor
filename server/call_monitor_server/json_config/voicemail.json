@@ -1,0 +1,56 @@
+{
+    "en-US": {
+        "model_dir": "trained_models/cnn_voicemail_us_20221109",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "es-MX": {
+        "model_dir": "trained_models/cnn_voicemail_mx_20230519",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "id-ID": {
+        "model_dir": "trained_models/cnn_voicemail_id_20230519",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "ja-JP": {
+        "model_dir": "trained_models/cnn_voicemail_jp_20231208",
+        "max_duration": 25.0,
+        "max_hit_times": -1,
+        "black_list": []
+    },
+    "ko-KR": {
+        "model_dir": "trained_models/cnn_voicemail_kr_20231024",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "ms-MY": {
+        "model_dir": "trained_models/cnn_voicemail_my_20231024",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "th-TH": {
+        "model_dir": "trained_models/cnn_voicemail_th_20221107",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "zh-CN": {
+        "model_dir": "trained_models/cnn_voicemail_tw_20230519",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    },
+    "zh-TW": {
+        "model_dir": "trained_models/cnn_voicemail_tw_20230519",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "black_list": []
+    }
+}

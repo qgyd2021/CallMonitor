@@ -35,9 +35,9 @@ def main():
     with open(args.log_file, "r", encoding="utf-8") as f:
         for row in f:
             row = str(row).strip()
-            # if not row.__contains__(args.language):
-            #     continue
-
+            if not row.__contains__(args.language):
+                continue
+            print(row)
             match1 = re.search(r"request language: (.*?)response body: (.*?)", row, flags=re.I)
             if match1 is None:
                 continue

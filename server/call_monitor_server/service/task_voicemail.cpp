@@ -165,13 +165,13 @@ bool VoicemailContextProcess::decision() {
     score_queue_.pop();
     if (this_score_ > threshold1_) {
       message_ = "this_score: " + std::to_string(this_score_) +
-                 ", threshold1_: " + std::to_string(threshold1_);
+                 ", threshold1: " + std::to_string(threshold1_);
       result = true;
       break;
     } else if ((last_score_ + this_score_) / 2 > threshold2_) {
       message_ = "last_score: " + std::to_string(last_score_) +
                  ", this_score: " + std::to_string(this_score_) +
-                 ", threshold2_: " + std::to_string(threshold2_);
+                 ", threshold2: " + std::to_string(threshold2_);
       result = true;
       break;
     }

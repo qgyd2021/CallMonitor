@@ -253,6 +253,12 @@ docker cp \
 /tmp/CallMonitor \
 CallMonitor:/data/tianxing/CLionProjects/CallMonitor/build/
 
+docker cp \
+CallMonitor:/data/tianxing/CLionProjects/CallMonitor/build \
+/tmp
+
+
+
 ```
 
 nginx 重启

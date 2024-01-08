@@ -39,6 +39,8 @@ bool report_asr_event(
     std::string & secret_key
 )
 {
+  //curl -X POST http://127.0.0.1:8002/svrapi/callbot/voip/asrevent -d '{}'
+
   //https://cplusplus.com/reference/chrono/
   auto millisecond_clock = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
   int64_t millisecond = millisecond_clock.count();

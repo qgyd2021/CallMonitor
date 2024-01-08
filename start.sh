@@ -99,11 +99,11 @@ elif [ "${environment}" == "sg" ]; then
   --call_monitor_log_dir=./logs/ \
   > nohup.out &
 
-elif [ "${environment}" == "id" ]; then
+elif [ "${environment}" == "sea-id" ]; then
   nohup \
   ./${build_dir}/CallMonitor \
   --http_port ${http_port} \
-  --asr_event_http_host_port "http://127.0.0.1:8002" \
+  --asr_event_http_host_port "http://172.16.0.160:8002" \
   --call_monitor_stderrthreshold=0 \
   --call_monitor_log_dir=./logs/ \
   > nohup.out &

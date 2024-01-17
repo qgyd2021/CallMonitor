@@ -83,7 +83,7 @@ function stop() {
 }
 
 function del_cron() {
-  item="${script_dir}/check.sh --server_name ${server_name} --cmdline ${cmdline} --work_dir ${work_dir} >> ${logs_dir}/check.log 2>&1"
+  item="${script_dir}/check.sh"
 
   exist=$(crontab -l | grep "$item" | grep -v "#" | wc -l)
   if [ "$exist" != "0" ]; then

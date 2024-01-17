@@ -86,10 +86,10 @@ elif [ "${environment}" == "vi" ]; then
 fi
 
 
-cmdline="./${build_dir}/CallMonitor
---http_port ${http_port}
---asr_event_http_host_port \"${asr_event_http_host_port}\"
---call_monitor_stderrthreshold=0
+cmdline="./${build_dir}/CallMonitor \
+--http_port ${http_port} \
+--asr_event_http_host_port \"${asr_event_http_host_port}\" \
+--call_monitor_stderrthreshold=0 \
 --call_monitor_log_dir=./logs/"
 
 nohup "${cmdline}" > nohup.out &

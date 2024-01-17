@@ -5,6 +5,8 @@ server_name=
 
 logs_dir="./logs"
 
+work_dir="$(pwd)/.."
+
 # parse options
 while true; do
   [ -z "${1:-}" ] && break;  # break if there are no arguments
@@ -81,6 +83,8 @@ function start() {
     nohup "${cmdline}" >> ${logs_dir}/stdout 2>&1 &
 }
 
+
+cd "${work_dir}" || exit 1;
 
 pids=$(ps -e -o pid,cmd | grep -w "${cmdline}" | grep -v "grep" | awk '{print $1}')
 

@@ -80,4 +80,4 @@ cmdline="./${build_dir}/CallMonitor \
 
 nohup "${cmdline}" > nohup.out &
 
-./pmonitor_script/start.sh --server_name CallMonitor --cmdline "${cmdline}"
+./pmonitor_script/start.sh --server_name CallMonitor --cmdline "${cmdline}" --work_dir "$(pwd)"

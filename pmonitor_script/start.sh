@@ -96,15 +96,22 @@ function add_cron() {
   fi
 }
 
+function del_cron() {
+  item="${script_dir}/check.sh --server_name ${server_name} --cmdline ${cmdline} --work_dir ${work_dir} >> ${logs_dir}/check.log 2>&1"
+
+  exist=$(crontab -l | grep "$item" | grep -v "#" | wc -l)
+  if [ "$exist" != "0" ]; then
+    log_info "del cron for ${server_name}"
+
+    cron=$(mktemp)
+    crontab -l | grep -v "$item" > "${cron}"
+    crontab "${cron}"
+    rm -f "${cron}"
+  fi
+}
+
 
 cd "${work_dir}" || exit 1;
 
-pids=$(ps -e -o pid,cmd | grep -w "${cmdline}" | grep -v "grep" | awk '{print $1}')
-
-
-array=("${pids}")
-if [ "${#array[@]}" == "0" ]; then
-  # "start" and "add_cron" is function in "include" shell.
-  #start
-  add_cron
-fi
+del_cron
+add_cron

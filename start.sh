@@ -8,6 +8,7 @@
 environment=dev
 http_port=4070
 build_dir="build"
+pmonitor=true
 
 # parse options
 while true; do
@@ -79,7 +80,7 @@ cmdline="./${build_dir}/CallMonitor \
 --call_monitor_log_dir=./logs/"
 
 nohup ${cmdline} > nohup.out &
-echo "run server"
 
-./pmonitor_script/start.sh --server_name CallMonitor --cmdline "${cmdline}" --work_dir "$(pwd)"
-echo "run pmonitor"
+if [ ${pmonitor} ]; then
+  ./pmonitor_script/start.sh --server_name CallMonitor --cmdline "${cmdline}" --work_dir "$(pwd)"
+fi

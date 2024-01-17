@@ -86,7 +86,7 @@ elif [ "${environment}" == "vi" ]; then
 fi
 
 
-cmdline="./${build_dir}/CallMonitor \
+cmdline="${build_dir}/CallMonitor \
 --http_port ${http_port} \
 --asr_event_http_host_port \"${asr_event_http_host_port}\" \
 --call_monitor_stderrthreshold=0 \

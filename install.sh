@@ -12,7 +12,7 @@ system_version=centos
 
 verbose=true;
 stage=-1
-stop_stage=3
+stop_stage=0
 
 # parse options
 while true; do
@@ -48,7 +48,7 @@ data_dir="$(pwd)/data"
 
 mkdir -p "${data_dir}"
 
-yum install -y bzip2 git lrzsz wget vim
+yum install -y bzip2 git lrzsz wget vim cron
 
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cmdline=
 server_name=
+cmdline=
+grep_name=
 
 logs_dir="./logs"
 
@@ -44,6 +45,10 @@ if [ -z "${cmdline}" ]; then
   echo "'--cmdline' is required." && exit 1;
 fi
 
+if [ -z "${grep_name}" ]; then
+  echo "'--grep_name' is required." && exit 1;
+fi
+
 # ${str:a:b} means extracting b characters starting from string a
 # ${0:a:b} means extracting b characters starting from string a from ${0}
 # ${0} is "start.sh" in "sh start.sh"
@@ -69,17 +74,6 @@ function log_error() {
 
 function log_info() {
   echo -e "\033[32m\033[01m$(log_date)\tinfo\t$1 \033[0m"
-}
-
-function start() {
-  log_info "start ${server_name}"
-
-  if [ ! -d ${logs_dir} ]; then
-      mkdir ${logs_dir}
-  fi
-
-  ulimit -n 102400
-  nohup ${cmdline} >> ${logs_dir}/stdout 2>&1 &
 }
 
 function add_cron() {

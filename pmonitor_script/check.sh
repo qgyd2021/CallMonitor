@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cmdline=
 server_name=
+cmdline=
+grep_name=
 
 logs_dir="./logs"
 
@@ -45,6 +46,10 @@ if [ -z "${cmdline}" ]; then
   echo "'--cmdline' is required." && exit 1;
 fi
 
+if [ -z "${grep_name}" ]; then
+  echo "'--grep_name' is required." && exit 1;
+fi
+
 # ${str:a:b} means extracting b characters starting from string a
 # ${0:a:b} means extracting b characters starting from string a from ${0}
 # ${0} is "start.sh" in "sh start.sh"
@@ -86,7 +91,8 @@ function start() {
 
 cd "${work_dir}" || exit 1;
 
-pids=$(ps -e -o pid,cmd | grep -w "${cmdline}" | grep -v "grep" | awk '{print $1}')
+srouce
+pids=$(ps -e -o pid,cmd | grep -w "${grep_name}" | grep -v "grep" | awk '{print $1}')
 
 
 array=("${pids}")

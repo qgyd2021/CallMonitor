@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cmdline=
 server_name=
+cmdline=
+grep_name=
 
 # parse options
 while true; do
@@ -38,6 +39,10 @@ fi
 
 if [ -z "${cmdline}" ]; then
   echo "'--cmdline' is required." && exit 1;
+fi
+
+if [ -z "${grep_name}" ]; then
+  echo "'--grep_name' is required." && exit 1;
 fi
 
 # ${str:a:b} means extracting b characters starting from string a

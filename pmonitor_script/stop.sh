@@ -57,6 +57,18 @@ fi
 
 
 # functions
+function log_date() {
+  date "+%Y-%m-%dT%H:%M:%S"
+}
+
+function log_error() {
+  echo -e "\033[31m\033[01m$(log_date)\terror\t$1 \033[0m"
+}
+
+function log_info() {
+  echo -e "\033[32m\033[01m$(log_date)\tinfo\t$1 \033[0m"
+}
+
 function stop() {
   pids=$(ps -e -o pid,cmd | grep -w "${cmdline}" | grep -v "grep" | awk '{print $1}')
 

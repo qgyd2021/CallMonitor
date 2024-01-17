@@ -80,7 +80,7 @@ function start() {
     fi
 
     ulimit -n 102400
-    nohup "${cmdline}" >> ${logs_dir}/stdout 2>&1 &
+    nohup ${cmdline} >> ${logs_dir}/stdout 2>&1 &
 }
 
 

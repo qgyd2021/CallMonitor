@@ -48,8 +48,11 @@ data_dir="$(pwd)/data"
 
 mkdir -p "${data_dir}"
 
-yum install -y bzip2 git lrzsz wget vim cron
-
+if [ ${system_version} = "centos" ]; then
+  yum install -y bzip2 git lrzsz wget vim cronie
+elif [ ${system_version} = "ubuntu" ]; then
+  apt-get install -y bzip2 git lrzsz wget vim cron
+fi
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   $verbose && echo "stage -1: download models"

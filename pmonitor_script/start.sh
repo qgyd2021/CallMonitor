@@ -105,6 +105,6 @@ pids=$(ps -e -o pid,cmd | grep -w "${cmdline}" | grep -v "grep" | awk '{print $1
 array=("${pids}")
 if [ "${#array[@]}" == "0" ]; then
   # "start" and "add_cron" is function in "include" shell.
-  start
+  #start
   add_cron
 fi

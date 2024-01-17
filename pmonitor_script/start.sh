@@ -72,28 +72,28 @@ function log_info() {
 }
 
 function start() {
-    log_info "start ${server_name}"
+  log_info "start ${server_name}"
 
-    if [ ! -d ${logs_dir} ]; then
-        mkdir ${logs_dir}
-    fi
+  if [ ! -d ${logs_dir} ]; then
+      mkdir ${logs_dir}
+  fi
 
-    ulimit -n 102400
-    nohup "${cmdline}" >> ${logs_dir}/stdout 2>&1 &
+  ulimit -n 102400
+  nohup "${cmdline}" >> ${logs_dir}/stdout 2>&1 &
 }
 
 function add_cron() {
-    item="${script_dir}/check.sh >> ${logs_dir}/check.log 2>&1"
-    exist=$(crontab -l | grep "$item" | grep -v "#" | wc -l)
-    if [ "${exist}" == "0" ]; then
-        log_info "add cron for ${server_name}"
+  item="${script_dir}/check.sh >> ${logs_dir}/check.log 2>&1"
+  exist=$(crontab -l | grep "$item" | grep -v "#" | wc -l)
+  if [ "${exist}" == "0" ]; then
+    log_info "add cron for ${server_name}"
 
-        cron=$(mktemp)
-        crontab -l > "${cron}"
-        echo "*/1 * * * * $item" >> "${cron}"
-        crontab "${cron}"
-        rm -f "${cron}"
-    fi
+    cron=$(mktemp)
+    crontab -l > "${cron}"
+    echo "*/1 * * * * $item" >> "${cron}"
+    crontab "${cron}"
+    rm -f "${cron}"
+  fi
 }
 
 

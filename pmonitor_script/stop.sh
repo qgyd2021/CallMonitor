@@ -3,10 +3,6 @@
 cmdline=
 server_name=
 
-logs_dir="./logs"
-
-work_dir="$(pwd)/.."
-
 # parse options
 while true; do
   [ -z "${1:-}" ] && break;  # break if there are no arguments

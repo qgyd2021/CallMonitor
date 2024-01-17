@@ -45,76 +45,53 @@ mkdir -p logs/
 mkdir -p /data/tianxing/update_stream_wav
 
 
+# ${str:a:b} means extracting b characters starting from string a
+# ${0:a:b} means extracting b characters starting from string a from ${0}
+# ${0} is "start.sh" in "sh start.sh"
+
+# get the absolute dir where the start.sh file is located.
+if [ "${0:0:1}" == "/" ]; then
+  # command like "sh /p_monitor_script/start.sh"
+  script_dir=$(dirname "$0")
+else
+  # command like "sh p_monitor_script/start.sh"
+  script_dir=$(pwd)/$(dirname "$0")
+fi
+
+
 if [ "${environment}" == "sz" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://10.75.27.200:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://10.75.27.200:8002"
 
 elif [ "${environment}" == "dev" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://10.20.251.7:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://10.20.251.7:8002"
 
 elif [ "${environment}" == "gz" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://10.20.251.7:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://10.20.251.7:8002"
 
 elif [ "${environment}" == "hk" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://10.52.66.97:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://10.52.66.97:8002"
 
 elif [ "${environment}" == "mx" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://127.0.0.1:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://127.0.0.1:8002"
 
 elif [ "${environment}" == "sg" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://127.0.0.1:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://127.0.0.1:8002"
 
 elif [ "${environment}" == "sea-id" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://172.16.0.225:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://172.16.0.225:8002"
 
 elif [ "${environment}" == "vi" ]; then
-  nohup \
-  ./${build_dir}/CallMonitor \
-  --http_port ${http_port} \
-  --asr_event_http_host_port "http://127.0.0.1:8002" \
-  --call_monitor_stderrthreshold=0 \
-  --call_monitor_log_dir=./logs/ \
-  > nohup.out &
+  asr_event_http_host_port="http://127.0.0.1:8002"
 
 fi
+
+
+cmdline="./${build_dir}/CallMonitor
+--http_port ${http_port}
+--asr_event_http_host_port \"${asr_event_http_host_port}\"
+--call_monitor_stderrthreshold=0
+--call_monitor_log_dir=./logs/"
+
+nohup "${cmdline}" > nohup.out &
+
+"${script_dir}/start.sh" --server_name CallMonitor --cmdline "${cmdline}"

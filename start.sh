@@ -46,36 +46,84 @@ mkdir -p /data/tianxing/update_stream_wav
 
 
 if [ "${environment}" == "sz" ]; then
-  asr_event_http_host_port="http://10.75.27.200:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.75.27.200:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "dev" ]; then
-  asr_event_http_host_port="http://10.20.251.7:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.20.251.7:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "gz" ]; then
-  asr_event_http_host_port="http://10.20.251.7:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.20.251.7:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "hk" ]; then
-  asr_event_http_host_port="http://10.52.66.97:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.52.66.97:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "mx" ]; then
-  asr_event_http_host_port="http://127.0.0.1:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://127.0.0.1:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "sg" ]; then
-  asr_event_http_host_port="http://127.0.0.1:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://127.0.0.1:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "sea-id" ]; then
-  asr_event_http_host_port="http://172.16.0.225:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://172.16.0.225:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
+
+elif [ "${environment}" == "id" ]; then
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://10.62.254.9:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 elif [ "${environment}" == "vi" ]; then
-  asr_event_http_host_port="http://127.0.0.1:8002"
+  nohup \
+  ./${build_dir}/CallMonitor \
+  --http_port ${http_port} \
+  --asr_event_http_host_port "http://127.0.0.1:8002" \
+  --call_monitor_stderrthreshold=0 \
+  --call_monitor_log_dir=./logs/ \
+  > nohup.out &
 
 fi
-
-
-cmdline="./${build_dir}/CallMonitor \
---http_port ${http_port} \
---asr_event_http_host_port \"${asr_event_http_host_port}\" \
---call_monitor_stderrthreshold=0 \
---call_monitor_log_dir=./logs/"
-
-nohup ${cmdline} > nohup.out &

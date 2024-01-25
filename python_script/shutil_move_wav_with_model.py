@@ -82,7 +82,7 @@ def main():
     args = get_args()
     src_dir = args.src_dir
     tgt_dir = args.tgt_dir
-    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\ja-JP2"
+    src_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\pt-BR"
     tgt_dir = r"D:\programmer\asr_datasets\voicemail\origin_wav\language_temp"
 
     src_dir = Path(src_dir)
@@ -115,10 +115,10 @@ def main():
         else:
             continue
 
-        sample_rate, signal = wavfile.read(filename)
-        label, _ = predict(signal=signal, model_dict=d)
-        if label != args.label:
-            continue
+        # sample_rate, signal = wavfile.read(filename)
+        # label, _ = predict(signal=signal, model_dict=d)
+        # if label != args.label:
+        #     continue
 
         if count > args.limit:
             break

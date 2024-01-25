@@ -45,8 +45,13 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
   $verbose && echo "stage 0: build"
   cd "${work_dir}" || exit 1;
 
-  # cmake -B build (Use half the CPUs)
-  cmake --build ./build --target CallMonitor -j "$(($(grep -c ^processor /proc/cpuinfo) / 2))"
+  if [ "$(grep -c ^processor /proc/cpuinfo)" -lt 8 ]; then
+    # cmake -B build (Use half the CPUs)
+    echo "cpu count less than 8, would not to compile it.";
+  else
+    # cmake -B build (Use half the CPUs)
+    cmake --build ./build --target CallMonitor -j "$(($(grep -c ^processor /proc/cpuinfo) / 2))"
+  fi
 
   if [ "${system_version}" == "windows" ]; then
     cp ./build/Debug/CallMonitor.exe ./build/CallMonitor.exe

@@ -30,9 +30,12 @@ public:
   double max_energy_threshold_ = 0.0;
   double max_duration_threshold_ = 0.0;
 
+  void load_language_to_thresholds(json & language_to_thresholds);
+  void load_scene_id_black_list(json & scene_id_black_list_json);
+  void load_json_config(const std::string & config_json_file);
+
   MuteDetectContextProcess(
-      const std::map<std::string, std::vector<std::pair<double, double>>> language_to_thresholds,
-      const std::set<std::string> & scene_id_black_list,
+      const std::string & config_json_file,
       std::string language, std::string call_id, std::string scene_id
                            );
 
@@ -52,12 +55,7 @@ public:
   std::int64_t cache_last_update_time_ = 0;
   std::mutex cache_update_lock_;
 
-  std::map<std::string, std::vector<std::pair<double, double>>> language_to_thresholds_;
-  std::set<std::string> scene_id_black_list_;
-
-  void load_language_to_thresholds(json & language_to_thresholds);
-  void load_scene_id_black_list(json & scene_id_black_list_json);
-  void load_json_config(const std::string & config_json_file);
+  std::string config_json_file_;
 
   MuteDetectManager(const std::string & config_json_file);
 

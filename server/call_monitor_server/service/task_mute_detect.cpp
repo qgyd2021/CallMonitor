@@ -22,12 +22,9 @@ using json = nlohmann::json;
 
 
 MuteDetectContextProcess::MuteDetectContextProcess(
-    const std::map<std::string, std::vector<std::pair<double, double>>> language_to_thresholds,
-    const std::set<std::string> & scene_id_black_list,
+    const std::string & config_json_file,
     std::string language, std::string call_id, std::string scene_id
-    ): TaskContextProcess(),
-    language_to_thresholds_(language_to_thresholds),
-    scene_id_black_list_(scene_id_black_list)
+    ): TaskContextProcess()
     {
 
   language_ = language;
@@ -35,6 +32,9 @@ MuteDetectContextProcess::MuteDetectContextProcess(
   scene_id_ = scene_id;
 
   //language_to_thresholds, max duration threshold.
+  LOG(INFO) << "load json config: " << config_json_file;
+  this->load_json_config(config_json_file);
+
   double energy;
   double duration;
   const std::map<std::string, std::vector<std::pair<double, double>>>::iterator item2 = language_to_thresholds_.find(language);
@@ -52,6 +52,41 @@ MuteDetectContextProcess::MuteDetectContextProcess(
       if (duration > max_energy_threshold_) {
         max_energy_threshold_ = energy;
       }
+    }
+  }
+}
+
+
+void MuteDetectContextProcess::load_language_to_thresholds(json & language_to_thresholds) {
+  language_to_thresholds_ = language_to_thresholds;
+}
+
+
+void MuteDetectContextProcess::load_scene_id_black_list(json & scene_id_black_list_json) {
+
+  scene_id_black_list_ = scene_id_black_list_json.get<std::set<std::string>>();
+
+}
+
+
+void MuteDetectContextProcess::load_json_config(const std::string & config_json_file) {
+  json config_json;
+  std::ifstream f(config_json_file);
+  f >> config_json;
+
+  for (
+      json::iterator it = config_json.begin();
+      it != config_json.end();
+      ++it
+      ) {
+    if (it.key() == "language_to_thresholds") {
+      this->load_language_to_thresholds(it.value());
+
+    } else if (it.key() == "scene_id_black_list") {
+      this->load_scene_id_black_list(it.value());
+
+    } else {
+      //
     }
   }
 }
@@ -161,46 +196,8 @@ void MuteDetectContextProcess::process(std::string language, std::string call_id
 }
 
 
-void MuteDetectManager::load_language_to_thresholds(json & language_to_thresholds) {
-  language_to_thresholds_ = language_to_thresholds;
-}
-
-
-void MuteDetectManager::load_scene_id_black_list(json & scene_id_black_list_json) {
-
-  scene_id_black_list_ = scene_id_black_list_json.get<std::set<std::string>>();
-
-}
-
-
-void MuteDetectManager::load_json_config(const std::string & config_json_file) {
-  json config_json;
-  std::ifstream f(config_json_file);
-  f >> config_json;
-
-  for (
-      json::iterator it = config_json.begin();
-      it != config_json.end();
-      ++it
-      ) {
-    if (it.key() == "language_to_thresholds") {
-      this->load_language_to_thresholds(it.value());
-
-    } else if (it.key() == "scene_id_black_list") {
-      this->load_scene_id_black_list(it.value());
-
-    } else {
-      //
-    }
-  }
-}
-
-
 MuteDetectManager::MuteDetectManager(const std::string & config_json_file) {
-  //load models
-  LOG(INFO) << "load json config: " << config_json_file;
-  this->load_json_config(config_json_file);
-
+  config_json_file_ = config_json_file;
 }
 
 
@@ -212,7 +209,7 @@ MuteDetectContextProcess * MuteDetectManager::get_context(std::string language, 
   std::map<std::string, MuteDetectContextProcess * >::iterator item = context_process_cache_.find(call_id);
   if (item == context_process_cache_.end()) {
     context = new MuteDetectContextProcess(
-        language_to_thresholds_, scene_id_black_list_,
+        config_json_file_,
         language, call_id, scene_id
         );
     context_process_cache_[call_id] = context;

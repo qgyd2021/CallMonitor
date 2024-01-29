@@ -164,6 +164,7 @@ docker run -itd \
 --name CallMonitor \
 -p 4070:4070 \
 -v /data/tianxing/update_stream_wav:/data/tianxing/update_stream_wav \
+-v /data/tianxing/CLionProjects/CallMonitor/server/call_monitor_server/json_config:/data/tianxing/CLionProjects/CallMonitor/server/call_monitor_server/json_config \
 daocloud.io/centos:7 \
 /bin/bash
 
@@ -212,6 +213,7 @@ docker run -itd \
 --name CallMonitor \
 -p 4071:4071 \
 -v /data/tianxing/update_stream_wav:/data/tianxing/update_stream_wav \
+-v /data/tianxing/CLionProjects/CallMonitor/server/call_monitor_server/json_config:/data/tianxing/CLionProjects/CallMonitor/server/call_monitor_server/json_config \
 nxtele-docker.pkg.coding.net/ops/callbot-generic/cmake_gcc_py38:v1 \
 /bin/bash
 

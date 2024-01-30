@@ -135,7 +135,11 @@ bool MuteDetectContextProcess::decision() {
       " energy: " + std::to_string(energy_) + \
       " max_energy_threshold:  " + std::to_string(max_energy_threshold_);
 
-  const std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(language_);
+  std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(call_id_);
+  if (item == language_to_thresholds_.end()) {
+    item = language_to_thresholds_.find(language_);
+  }
+
   if (item != language_to_thresholds_.end()) {
     for (
         std::vector<std::pair<double, double>>::iterator it = item->second.begin();
@@ -163,9 +167,9 @@ void MuteDetectContextProcess::process(std::string language, std::string call_id
 
   if (decision_flag) {
     std::string product_id = "callbot";
-    //voicemail correspond to eventType 1
-    int event_type = 1;
-    std::string text = "voicemail";
+    //voicemail correspond to eventType 1; mute_detect correspond to eventType 3;
+    int event_type = 3;
+    std::string text = "mute_detect";
 
     LOG(INFO) << "report voicemail; duration: " << duration_ \
               << ", language: " << language \

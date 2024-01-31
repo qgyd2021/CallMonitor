@@ -33,7 +33,7 @@ def get_args():
     )
     parser.add_argument(
         '--scene_id',
-        default='unittest_mute_detect_scene_id',
+        default='h3f25ivhb0c0',
         type=str,
     )
     parser.add_argument(

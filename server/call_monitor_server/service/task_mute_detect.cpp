@@ -37,11 +37,14 @@ MuteDetectContextProcess::MuteDetectContextProcess(
 
   double energy;
   double duration;
-  const std::map<std::string, std::vector<std::pair<double, double>>>::iterator item2 = language_to_thresholds_.find(language);
-  if (item2 != language_to_thresholds_.end()) {
+  std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(scene_id);
+  if (item == language_to_thresholds_.end()) {
+    item = language_to_thresholds_.find(language);
+  }
+  if (item != language_to_thresholds_.end()) {
     for (
-        std::vector<std::pair<double, double>>::iterator it = item2->second.begin();
-        it != item2->second.end();
+        std::vector<std::pair<double, double>>::iterator it = item->second.begin();
+        it != item->second.end();
         ++it
         ) {
       duration = (*it).first;
@@ -138,7 +141,7 @@ bool MuteDetectContextProcess::decision() {
       " energy: " + std::to_string(energy_) + \
       " max_energy_threshold:  " + std::to_string(max_energy_threshold_);
 
-  std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(call_id_);
+  std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(scene_id_);
   if (item == language_to_thresholds_.end()) {
     item = language_to_thresholds_.find(language_);
   }

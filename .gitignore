@@ -4,7 +4,7 @@
 
 build/
 cmake-build-debug/
-json_config2/
+json_config/
 thirdparty/
 trained_models/
 logs/

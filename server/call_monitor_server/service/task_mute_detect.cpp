@@ -102,8 +102,11 @@ bool MuteDetectContextProcess::update(std::string language, std::string call_id,
       status_ = "finished";
       return false;
     }
-    const std::map<std::string, std::vector<std::pair<double, double>>>::iterator language_item = language_to_thresholds_.find(language);
-    if (language_item == language_to_thresholds_.end()) {
+    std::map<std::string, std::vector<std::pair<double, double>>>::iterator item = language_to_thresholds_.find(scene_id);
+    if (item == language_to_thresholds_.end()) {
+      item = language_to_thresholds_.find(language);
+    }
+    if (item == language_to_thresholds_.end()) {
       message_ = "language invalid. ";
       label_ = "unknown";
       status_ = "finished";

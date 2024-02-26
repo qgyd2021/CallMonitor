@@ -20,6 +20,7 @@ DECLARE_string(voicemail_json_file);
 DECLARE_string(scene_id_to_language_file);
 DECLARE_string(languages_to_skip_save_wav_file);
 DECLARE_string(mute_detect_json_config_file);
+DECLARE_string(voice_detect_json_config_file);
 
 DECLARE_string(asr_event_http_host_port);
 DECLARE_string(asr_event_uri);

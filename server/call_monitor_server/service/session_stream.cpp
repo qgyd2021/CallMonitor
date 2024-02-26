@@ -19,6 +19,7 @@
 #include "task_beep_detect.h"
 #include "task_voicemail.h"
 #include "task_mute_detect.h"
+#include "task_voice_detect.h"
 
 
 using json = nlohmann::json;
@@ -65,8 +66,10 @@ void SessionStream::init(){
   beep_detect_manager_ = new BeepDetectManager();
   LOG(INFO) << "new VoicemailManager: " << FLAGS_voicemail_json_file;
   voicemail_manager_ = new VoicemailManager(FLAGS_voicemail_json_file);
-  LOG(INFO) << "new MuteManager: " << FLAGS_mute_detect_json_config_file;
+  LOG(INFO) << "new MuteDetectManager: " << FLAGS_mute_detect_json_config_file;
   mute_detect_manager_ = new MuteDetectManager(FLAGS_mute_detect_json_config_file);
+  LOG(INFO) << "new VoiceDetectManager: " << FLAGS_voice_detect_json_config_file;
+  voice_detect_manager_ = new VoiceDetectManager(FLAGS_voice_detect_json_config_file);
 
   wav_save_dir_ = FLAGS_wav_save_dir;
 }
@@ -165,6 +168,17 @@ std::vector<TaskStatus> SessionStream::update_stream(
       mute_detect_context->status_
   );
   task_status_vector.push_back(task_status_mute_detect);
+
+  //task: voice detect
+  LOG(INFO) << "voice detect start";
+  TaskContextProcess * voice_detect_context = voice_detect_manager_->process(valid_language, call_id, scene_id, wav_file);
+  TaskStatus task_status_voice_detect = TaskStatus(
+      "voice detect",
+      voice_detect_context->message_,
+      voice_detect_context->label_,
+      voice_detect_context->status_
+  );
+  task_status_vector.push_back(task_status_voice_detect);
 
   //return
   return std::move(task_status_vector);

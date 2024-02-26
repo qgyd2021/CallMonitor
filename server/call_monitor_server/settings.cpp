@@ -18,6 +18,7 @@ DEFINE_string(voicemail_json_file, "server/call_monitor_server/json_config/voice
 DEFINE_string(scene_id_to_language_file, "server/call_monitor_server/json_config/scene_id_to_language.json", "scene_id_to_language_file");
 DEFINE_string(languages_to_skip_save_wav_file, "server/call_monitor_server/json_config/languages_to_skip_save_wav.json", "languages_to_skip_save_wav_file");
 DEFINE_string(mute_detect_json_config_file, "server/call_monitor_server/json_config/mute_detect_json_config.json", "mute_detect_json_config_file");
+DEFINE_string(voice_detect_json_config_file, "server/call_monitor_server/json_config/voice_detect_json_config.json", "voice_detect_json_config_file");
 
 //voicemail callback
 //HK callbot_asr_event_url=http://10.52.66.97:8002/svrapi/callbot/voip/asrevent

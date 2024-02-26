@@ -12,6 +12,7 @@
 #include "task_beep_detect.h"
 #include "task_voicemail.h"
 #include "task_mute_detect.h"
+#include "task_voice_detect.h"
 
 
 class TaskStatus
@@ -35,6 +36,7 @@ public:
   BeepDetectManager * beep_detect_manager_;
   VoicemailManager * voicemail_manager_;
   MuteDetectManager * mute_detect_manager_;
+  VoiceDetectManager * voice_detect_manager_;
 
   std::string wav_save_dir_;
 

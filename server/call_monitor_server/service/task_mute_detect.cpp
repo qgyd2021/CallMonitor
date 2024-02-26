@@ -173,7 +173,8 @@ void MuteDetectContextProcess::process(std::string language, std::string call_id
 
   if (decision_flag) {
     std::string product_id = "callbot";
-    //voicemail correspond to eventType 1; mute_detect correspond to eventType 3;
+    // voicemail correspond to eventType 1;
+    // mute_detect correspond to eventType 3;
     int event_type = 3;
     std::string text = "mute_detect";
 

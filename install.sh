@@ -61,6 +61,7 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   mkdir -p trained_models && cd trained_models || exit 1;
 
   model_name_array=(
+    cnn_voicemail_common_20240221
     cnn_voicemail_id_20230519
     cnn_voicemail_jp_20231208
     cnn_voicemail_kr_20231024

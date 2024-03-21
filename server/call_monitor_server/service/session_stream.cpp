@@ -170,15 +170,15 @@ std::vector<TaskStatus> SessionStream::update_stream(
   task_status_vector.push_back(task_status_mute_detect);
 
   //task: voice detect
-  LOG(INFO) << "voice detect start";
-  TaskContextProcess * voice_detect_context = voice_detect_manager_->process(valid_language, call_id, scene_id, wav_file);
-  TaskStatus task_status_voice_detect = TaskStatus(
-      "voice detect",
-      voice_detect_context->message_,
-      voice_detect_context->label_,
-      voice_detect_context->status_
-  );
-  task_status_vector.push_back(task_status_voice_detect);
+  //LOG(INFO) << "voice detect start";
+  //TaskContextProcess * voice_detect_context = voice_detect_manager_->process(valid_language, call_id, scene_id, wav_file);
+  //TaskStatus task_status_voice_detect = TaskStatus(
+  //    "voice detect",
+  //    voice_detect_context->message_,
+  //    voice_detect_context->label_,
+  //    voice_detect_context->status_
+  //);
+  //task_status_vector.push_back(task_status_voice_detect);
 
   //return
   return std::move(task_status_vector);

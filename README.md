@@ -235,7 +235,7 @@ core 调试
 yum install -y gdb
 
 查看 core 文件
-gdb -c core.4947 ./build/CallMonitor
+gdb -c core.20628 ./build/CallMonitor
 where
 
 ```
@@ -274,11 +274,15 @@ nginx -t
 
 布署的服务器列表
 ```text
+CHN_TEN_AIC_CTS-7.9_AI-DEV
+175.178.129.90
+
 IDN_GCP_VIC_DEB-11.0_NXCC-FREESWITCH-idn-01
 34.128.69.212
 
 IDN_HW_SEA_DEB_11.8_SEA-FREESWITCH-idn-10
 110.239.92.62
+(已关闭机器)
 
 HK_TEN_AIC_CTS-7.9_NLP_TMP
 124.156.139.217
@@ -287,3 +291,36 @@ GCP_SGP_VIC_CTS-7.9_NXCC-FREESWITCH-sgp-03
 34.87.145.215
 
 ```
+
+
+### 进程监控
+
+启动基于 crontab 的定时监控，企业微信告警。
+
+```text
+./send_wecom \
+-webhook=https://qyapi.weixin.qq.com/cgi-bin/webhook/send \
+-secretKey=fd86eb80-6fe0-4fb0-9f3b-3277268ea82d \
+-msgType=markdown \
+-markdownContent="test"
+```
+1. 发送测试告警信息。
+
+```text
+sh alarm.sh --server_name "CallMonitor" --message "告警测试，无异常。"
+```
+1. 执行 alarm.sh 文件，查看脚本是否可以正确告警。
+
+```text
+>>> sh crontab_monitor/start.sh 
+2024-03-20T17:51:27     info    add cron for CallMonitor 
+>>> crontab -l
+*/1 * * * * /data/tianxing/CLionProjects/CallMonitor/crontab_monitor/check.sh >> /data/tianxing/CLionProjects/CallMonitor/logs/check.log 2>&1
+```
+1. sh start.sh 添加 crontab 任务。
+2. crontab -l 查看 crontab 任务。`*/1` 代表每1分钟执行一次。
+
+```text
+*/1 * * * * /data/tianxing/CLionProjects/CallMonitor/crontab_monitor/check.sh >> /data/tianxing/CLionProjects/CallMonitor/logs/check.log 2>&1
+```
+1. 执行 crontab 任务中的命令行，看是否可以成功告警。

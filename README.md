@@ -188,6 +188,7 @@ https://nxtele.coding.net/p/aibot/d/fs_callbot/git/tree/master/fs_wav_process.py
 ```text
 bash /data/tianxing/images/transfer_nx.sh push cmake_gcc_py38:v1
 bash /data/tianxing/images/transfer_img.sh pull nxtele-docker.pkg.coding.net/ops/callbot-generic/cmake_gcc_py38:v1
+bash /data/tianxing/images/transfer_img.sh pull cmake_gcc_py38:v1
 
 sh /data/tianxing/images/transfer_nx.sh push callmonitor:v20230515_1002
 bash /data/tianxing/images/transfer_img.sh pull nxtele-docker.pkg.coding.net/ops/callbot-generic/callmonitor:v20230515_1002

@@ -5,7 +5,6 @@
 build/
 cmake-build-debug/
 crontab_monitor/
-json_config/
 thirdparty/
 trained_models/
 logs/

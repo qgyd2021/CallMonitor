@@ -1,0 +1,10 @@
+{
+    "id-ID": {
+        "model_dir": "trained_models/cnn_voicemail_common_20240221",
+        "max_duration": 10.0,
+        "max_hit_times": 1,
+        "sound_event": "voice",
+        "threshold": 0.3,
+        "event_type": 4
+    }
+}
